@@ -38,10 +38,19 @@ def compute_lines(points, prime_numbers):
     """
     n = len(points)
     res = []
+    colors = {1 : Color(255, 255, 255,127), 3 : Color(255, 0, 0, 127), \
+              5: Color(255, 255, 0, 127), 7 : Color(0, 255, 0, 127), \
+              9 : Color(0, 0, 255, 127)}
+    # colors = {}
+    # colors[1] = colors[3] = colors[5] = colors[7] = colors[9] = Color(255, 255, 255, 255)
     for source in points:
-        for prime in [p for p in prime_numbers if source < p < 2 * source and p < n]:
+        valid_primes = [p for p in prime_numbers if source < p < 2 * source and p < n]
+        # for prime in valid_primes:
+        if len(valid_primes) == 0:
+            continue
+        for prime in [max(valid_primes)]:
             destination = prime % point_number
-            res.append((points[source], points[destination]))
+            res.append((points[source], points[destination], colors[prime % 10]))
     return res
 
 def draw_lines(window, x, y, radius, lines):
@@ -50,8 +59,8 @@ def draw_lines(window, x, y, radius, lines):
 
     """
     gfxdraw.circle(window, x, y, radius, Color(255, 255, 255,255))
-    for p1, p2 in lines:
-        gfxdraw.line(window, p1[0], p1[1], p2[0], p2[1], Color(255, 0, 0,255))
+    for p1, p2, color in lines:
+        gfxdraw.line(window, p1[0], p1[1], p2[0], p2[1], color)
 
 if __name__ == '__main__':
     # number of points on the circle.
